@@ -23,7 +23,7 @@
   }
   document.addEventListener("pointerdown", function (e) { if (!e.target.closest(".dlwrap")) closeMenus(); });
   /* light / dark switch: follows the device until the reader picks one, then remembers it */
-  var themeBtn = $("#theme"), darkNow = function () { var t = document.documentElement.dataset.theme; return t ? t === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches; };
+  var themeBtn = $("#theme"), darkNow = function () { return document.documentElement.dataset.theme === "dark"; };
   var themeLabel = function () { if (themeBtn) themeBtn.textContent = darkNow() ? "Light" : "Dark"; };
   if (themeBtn) { themeLabel(); themeBtn.addEventListener("click", function () { var t = darkNow() ? "light" : "dark"; document.documentElement.dataset.theme = t; try { localStorage.setItem("dr_theme", t); } catch (e) {} themeLabel(); }); }
   document.addEventListener("click", function (e) {
@@ -147,8 +147,13 @@
       var rows = window.DRC.filter(function (c) { return !named.length || named.indexOf(c.sym) >= 0; }).map(function (c) { var t = (c.title + " " + c.text).toLowerCase(); return { c: c, t: t }; });
       W.forEach(function (w) { df[w] = rows.filter(function (r) { return r.t.indexOf(w) >= 0; }).length; });
       var scored = rows.map(function (r) {
-        var sc = 0; W.forEach(function (w) { if (r.t.indexOf(w) >= 0) sc += Math.log(1 + N / (1 + df[w])); });
+        var sc = 0, ti = r.c.title.toLowerCase();
+        W.forEach(function (w) {
+          var n = r.t.split(w).length - 1;
+          if (n) sc += Math.log(1 + N / (1 + df[w])) * (1 + Math.log(n)) * (ti.indexOf(w) >= 0 ? 1.6 : 1);
+        });
         if (sym && r.c.sym === sym) sc *= 1.5;
+        if (/#(orders|datacentres|story|capital|people|timeline|legal|media)$/.test(r.c.url)) sc *= 1.4;   /* the deep-dive pages are written to answer questions; the analyst dossier is the backstop */
         return { c: r.c, sc: sc };
       }).filter(function (x) { return x.sc > 0; }).sort(function (a, b) { return b.sc - a.sc; }).slice(0, 6);
       cb(scored.map(function (x, i) { return { n: i + 1, title: x.c.title, url: x.c.url, snippet: x.c.text.slice(0, 240) + (x.c.text.length > 240 ? "…" : "") }; }));
@@ -161,10 +166,11 @@
     q = (q || "").trim(); if (!q) return;
     var my = ++askSeq; askEl = askEl || $("#ask");
     askEl.hidden = false;
+    if (PAGE === "company") window.scrollTo(0, 0);
     askEl.innerHTML = '<div class="al">Asking the room</div><div class="at q">' + esc(q) + '</div><div class="wait"><i></i><i></i><i></i> Reading the filings…</div>';
     var none = $("#none"); if (none) none.hidden = true;
     var done = function (html) { if (my === askSeq) { askEl.innerHTML = html; var n = $("#none"); if (n) n.hidden = true; } };
-    var head = '<div class="al">Answer</div><div class="at q">' + esc(q) + "</div>";
+    var head = '<button type="button" class="askx" data-askclose>Close</button><div class="al">Answer</div><div class="at q">' + esc(q) + "</div>";
     var fallback = function (why) {
       localSearch(q, sym, function (srcs) {
         done(head + '<div class="body"><p>' + esc(why) + "</p></div>" + (srcs.length ? srcList(srcs, "Closest passages") : "<p>Nothing matching found.</p>") + NOTE);
@@ -180,6 +186,7 @@
       })
       .catch(function () { fallback("Live answers aren't available on this copy of the room, so here are the closest passages from the documents."); });
   }
+  document.addEventListener("click", function (e) { if (e.target.closest("[data-askclose]")) { askSeq++; var p = $("#ask"); if (p) p.hidden = true; } });
   var iAsk = function (q, sym) { if (!askEl) askEl = $("#ask"); runAsk(q, sym); };
   document.addEventListener("click", function (e) {
     var b = e.target.closest("[data-ask]"); if (!b) return;
@@ -259,6 +266,7 @@
 
   /* ---------- company views (#dossier #results #annual #decks #filings #files) ---------- */
   if (PAGE === "company") {
+    ASKSYM = $(".co").dataset.sym; var sf0 = $(".search"); if (sf0) sf0.addEventListener("submit", function (e) { e.preventDefault(); var qv = $("#q").value; if (qv.trim()) iAsk(qv, ASKSYM); });
     var sf = $(".search"); if (sf) { var hi = document.createElement("input"); hi.type = "hidden"; hi.name = "sym"; hi.value = $(".co").dataset.sym; sf.appendChild(hi); }
     var VIEWS = $$("[data-view]").map(function (x) { return x.dataset.view; });
     var sym = $(".co").dataset.sym, back = $("#back"), cur = null;
