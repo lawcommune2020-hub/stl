@@ -463,3 +463,20 @@ a.xs:hover{background:var(--ink);color:var(--bg)}a.xs:hover b{color:var(--bg)}a.
 .tile[data-go="story"] i,.tile[data-go="story"] small{color:var(--onBlue)}
 .tile[data-go="story"]:hover{background:var(--ink);color:var(--bg)}
 @media (min-width:700px){.casebanner{padding:22px 20px 20px}.casebanner ul{grid-template-columns:1fr 1fr;gap:10px 28px}.cb-h{font-size:32px}}
+
+/* from the books */
+.booksbar{display:block;border-bottom:1px solid var(--ink);background:var(--bg)}
+.bk-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding:14px 16px 10px}
+.bk-h b{font-stretch:112%;font-weight:900;font-size:21px;letter-spacing:-.02em}
+.bk-h span{font:400 11px "DM Mono",monospace;color:var(--mute);flex:1 1 180px}
+.bk-h em{font:normal 500 11px "DM Mono",monospace;text-transform:uppercase;border-bottom:1px solid var(--blue)}
+.bk-grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--ink)}
+.bk{padding:11px 16px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:1px}
+.bk:nth-child(2n){border-right:0}
+.bk span{font:500 10px "DM Mono",monospace;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+.bk b{font-stretch:106%;font-weight:800;font-size:20px;letter-spacing:-.01em}
+.bk small{font:400 10.5px "DM Mono",monospace;color:var(--mute)}
+.bk.hl{background:var(--blue);color:var(--onBlue);border-color:var(--blue)}
+.bk.hl span,.bk.hl small{color:var(--onBlue);opacity:.92}
+.booksbar:hover .bk-h em{background:var(--blue);color:var(--onBlue)}
+@media (min-width:700px){.bk-grid{grid-template-columns:repeat(4,1fr)}.bk:nth-child(2n){border-right:1px solid var(--line)}.bk:nth-child(4n){border-right:0}}
