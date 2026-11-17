@@ -442,3 +442,24 @@ a.xs:hover{background:var(--ink);color:var(--bg)}a.xs:hover b{color:var(--bg)}a.
 .dlb em{grid-column:2;grid-row:2;font-size:10.5px}
 .dlhead h3{white-space:nowrap}
 .mkt .px small{font:400 10.5px "DM Mono",monospace;color:var(--mute);line-height:1.4;margin-top:4px}
+
+/* promoter highlight and the case banner */
+.mc2.hl{background:var(--blue);color:var(--onBlue);border-right-color:var(--blue)}
+.mc2.hl span,.mc2.hl small{color:var(--onBlue);opacity:.9}
+.mc2.hl small{font-weight:600}
+.callout{margin:0 0 18px;border:2px solid var(--blue);background:var(--soft);padding:16px}
+.co-h{font:500 11px "DM Mono",monospace;text-transform:uppercase;letter-spacing:.05em;color:var(--blue)}
+.co-big{font-stretch:112%;font-weight:900;font-size:34px;letter-spacing:-.03em;line-height:1.1;margin:4px 0 10px}
+.callout p{font-size:15px;line-height:1.5;margin:0 0 8px;max-width:72ch}
+.casebanner{display:block;background:var(--blue);color:var(--onBlue);padding:18px 16px 16px;border-bottom:1px solid var(--ink)}
+.cb-h{font-stretch:112%;font-weight:900;font-size:26px;letter-spacing:-.03em;line-height:1.1}
+.casebanner ul{list-style:none;margin:12px 0 14px;padding:0;display:grid;gap:8px}
+.casebanner li{font-size:15px;line-height:1.4;padding-left:16px;position:relative}
+.casebanner li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;background:var(--onBlue)}
+.casebanner b{font-weight:800}
+.cb-cta{display:inline-block;font:500 12px "DM Mono",monospace;text-transform:uppercase;letter-spacing:.05em;border:1px solid var(--onBlue);padding:9px 12px}
+.casebanner:hover{background:var(--ink);color:var(--bg)}.casebanner:hover li::before{background:var(--bg)}.casebanner:hover .cb-cta{border-color:var(--bg)}
+.tile[data-go="story"]{background:var(--blue);color:var(--onBlue)}
+.tile[data-go="story"] i,.tile[data-go="story"] small{color:var(--onBlue)}
+.tile[data-go="story"]:hover{background:var(--ink);color:var(--bg)}
+@media (min-width:700px){.casebanner{padding:22px 20px 20px}.casebanner ul{grid-template-columns:1fr 1fr;gap:10px 28px}.cb-h{font-size:32px}}
